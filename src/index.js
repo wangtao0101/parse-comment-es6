@@ -1,1 +1,2 @@
-console.log('asdasdf');
+
+var a = 'index.js';
