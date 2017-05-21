@@ -1,4 +1,4 @@
-export default function stripComments(stringIN) {
+export default function stripComments(stringIN, trackComment) {
     const SLASH = '/';
     const BACK_SLASH = '\\';
     const STAR = '*';
@@ -6,7 +6,6 @@ export default function stripComments(stringIN) {
     const SINGLE_QUOTE = "'";
     const NEW_LINE = '\n';
     const CARRIAGE_RETURN = '\r';
-
     const BACK_QUOTE = '`';
 
     const string = stringIN;
@@ -15,8 +14,9 @@ export default function stripComments(stringIN) {
     const output = [];
 
     const comments = [];
-
     let lineNumber = 0;
+    let lineStart = 0;
+    const trackComment = trackComment;
 
     function nextLine() {
         lineNumber += 1;
@@ -60,6 +60,10 @@ export default function stripComments(stringIN) {
             return escaped;
         }
         return false;
+    }
+
+    function isLineTerminator(cp) {
+        return cp === '\r' || cp === '\n';
     }
 
     function processBackQuotedString() {
@@ -107,11 +111,31 @@ export default function stripComments(stringIN) {
     function processSingleLineComment() {
         if (getCurrentCharacter() === SLASH) {
             if (getNextCharacter() === SLASH) {
+                const comment = {
+                    type: 'LineComment',
+                };
+                comment.begin = {
+                    line: lineNumber,
+                    column: position - lineStart - 1,
+                };
                 next();
                 while (!atEnd()) {
                     next();
                     if (getCurrentCharacter() === NEW_LINE
-                            || getCurrentCharacter() === CARRIAGE_RETURN) {
+                        || getCurrentCharacter() === CARRIAGE_RETURN) {
+                        comment.end = {
+                            line: lineNumber,
+                            column: position - lineStart - 1,
+                        };
+                        nextLine();
+                        if (getCurrentCharacter() === CARRIAGE_RETURN
+                            && getNextCharacter() === NEW_LINE) {
+                            add();
+                            next();
+                        }
+                        add();
+                        next();
+                        comments.push(comment);
                         return;
                     }
                 }
@@ -122,7 +146,6 @@ export default function stripComments(stringIN) {
     function processMultiLineComment() {
         if (getCurrentCharacter() === SLASH) {
             if (getNextCharacter() === STAR) {
-                next();
                 next();
                 while (!atEnd()) {
                     next();
