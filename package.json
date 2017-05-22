@@ -19,6 +19,7 @@
     "url": "https://github.com/wangtao0101/parse-comment-es6/issues"
   },
   "scripts": {
+    "build": "babel src -d dist --source-maps",
     "test": "jest",
     "coverage": "jest --coverage",
     "lint": "eslint ./src"
@@ -28,6 +29,8 @@
     "babel-core": "^6.24.0",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^19.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "eslint": "^3.18.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-plugin-import": "^2.2.0",

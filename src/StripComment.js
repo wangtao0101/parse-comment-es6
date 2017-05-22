@@ -16,7 +16,7 @@ export default function stripComments(stringIN, trackComment) {
     const comments = [];
     let lineNumber = 0;
     let lineStart = 0;
-    const trackComment = trackComment;
+    const trackC = trackComment;
 
     function nextLine() {
         lineNumber += 1;
@@ -62,9 +62,9 @@ export default function stripComments(stringIN, trackComment) {
         return false;
     }
 
-    function isLineTerminator(cp) {
-        return cp === '\r' || cp === '\n';
-    }
+    // function isLineTerminator(cp) {
+    //     return cp === '\r' || cp === '\n';
+    // }
 
     function processBackQuotedString() {
         if (getCurrentCharacter() === BACK_QUOTE) {
@@ -72,12 +72,15 @@ export default function stripComments(stringIN, trackComment) {
             next();
             while (!atEnd()) {
                 if (getCurrentCharacter() === BACK_QUOTE && !isEscaping()) {
-                    return;
+                    add();
+                    next();
+                    return true;
                 }
                 add();
                 next();
             }
         }
+        return false;
     }
 
     function processSingleQuotedString() {
@@ -86,12 +89,15 @@ export default function stripComments(stringIN, trackComment) {
             next();
             while (!atEnd()) {
                 if (getCurrentCharacter() === SINGLE_QUOTE && !isEscaping()) {
-                    return;
+                    add();
+                    next();
+                    return true;
                 }
                 add();
                 next();
             }
         }
+        return false;
     }
 
     function processDoubleQuotedString() {
@@ -100,12 +106,15 @@ export default function stripComments(stringIN, trackComment) {
             next();
             while (!atEnd()) {
                 if (getCurrentCharacter() === DOUBLE_QUOTE && !isEscaping()) {
-                    return;
+                    add();
+                    next();
+                    return true;
                 }
                 add();
                 next();
             }
         }
+        return false;
     }
 
     function processSingleLineComment() {
@@ -113,20 +122,24 @@ export default function stripComments(stringIN, trackComment) {
             if (getNextCharacter() === SLASH) {
                 const comment = {
                     type: 'LineComment',
+                    loc: {},
+                    range: {},
                 };
-                comment.begin = {
+                comment.loc.start = {
                     line: lineNumber,
-                    column: position - lineStart - 1,
+                    column: position - lineStart,
                 };
+                comment.range.start = position;
                 next();
                 while (!atEnd()) {
                     next();
                     if (getCurrentCharacter() === NEW_LINE
                         || getCurrentCharacter() === CARRIAGE_RETURN) {
-                        comment.end = {
+                        comment.loc.end = {
                             line: lineNumber,
-                            column: position - lineStart - 1,
+                            column: position - lineStart,
                         };
+                        comment.range.end = position;
                         nextLine();
                         if (getCurrentCharacter() === CARRIAGE_RETURN
                             && getNextCharacter() === NEW_LINE) {
@@ -136,29 +149,56 @@ export default function stripComments(stringIN, trackComment) {
                         add();
                         next();
                         comments.push(comment);
-                        return;
+                        lineStart = position;
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     function processMultiLineComment() {
         if (getCurrentCharacter() === SLASH) {
             if (getNextCharacter() === STAR) {
+                const comment = {
+                    type: 'BlockComment',
+                    loc: {},
+                    range: {},
+                };
+                comment.loc.start = {
+                    line: lineNumber,
+                    column: position - lineStart,
+                };
+                comment.range.start = position;
                 next();
                 while (!atEnd()) {
                     next();
-                    if (getCurrentCharacter() === STAR) {
+                    if (getCurrentCharacter() === NEW_LINE
+                        || getCurrentCharacter() === CARRIAGE_RETURN) {
+                        nextLine();
+                        if (getCurrentCharacter() === CARRIAGE_RETURN
+                            && getNextCharacter() === NEW_LINE) {
+                            next();
+                        }
+                        lineStart = position + 1;
+                    } else if (getCurrentCharacter() === STAR) {
                         if (getNextCharacter() === SLASH) {
                             next();
                             next();
-                            return;
+                            comment.loc.end = {
+                                line: lineNumber,
+                                column: position - lineStart,
+                            };
+                            comment.range.end = position;
+                            comments.push(comment);
+                            return true;
                         }
                     }
                 }
             }
         }
+        return false;
     }
 
     function processRegularExpression() {
@@ -167,8 +207,66 @@ export default function stripComments(stringIN, trackComment) {
             next();
             while (!atEnd()) {
                 if (getCurrentCharacter() === SLASH && !isEscaping()) {
-                    return;
+                    add();
+                    next();
+                    return true;
                 }
+                add();
+                next();
+            }
+        }
+        return false;
+    }
+
+    function processSingleCharacterExpression(character) {
+        if (getCurrentCharacter() === character) {
+            add();
+            next();
+            while (!atEnd()) {
+                if (getCurrentCharacter() === character && !isEscaping()) {
+                    add();
+                    next();
+                    return true;
+                }
+                add();
+                next();
+            }
+        }
+        return false;
+    }
+
+    function process() {
+        if (processBackQuotedString()) {
+            return;
+        }
+        if (processDoubleQuotedString()) {
+            return;
+        }
+        if (processSingleQuotedString()) {
+            return;
+        }
+        if (processSingleLineComment()) {
+            return;
+        }
+        if (processMultiLineComment()) {
+            return;
+        }
+        if (processRegularExpression()) {
+            return;
+        }
+        if (!atEnd()) {
+            if (getCurrentCharacter() === NEW_LINE
+                || getCurrentCharacter() === CARRIAGE_RETURN) {
+                nextLine();
+                if (getCurrentCharacter() === CARRIAGE_RETURN
+                    && getNextCharacter() === NEW_LINE) {
+                    add();
+                    next();
+                }
+                add();
+                next();
+                lineStart = position;
+            } else {
                 add();
                 next();
             }
@@ -176,16 +274,7 @@ export default function stripComments(stringIN, trackComment) {
     }
 
     while (!atEnd()) {
-        processBackQuotedString();
-        processDoubleQuotedString();
-        processSingleQuotedString();
-        processSingleLineComment();
-        processMultiLineComment();
-        processRegularExpression();
-        if (!atEnd()) {
-            add();
-            next();
-        }
+        process();
     }
     return output.join('');
 }

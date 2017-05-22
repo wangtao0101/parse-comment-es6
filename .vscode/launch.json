@@ -5,22 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/src/index.js",
-            "stopOnEntry": false,
-            "args": [],
-            "cwd": "${workspaceRoot}",
-            "preLaunchTask": null,
-            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node.cmd",
-            "runtimeArgs": [
-                "--nolazy"
-            ],
-            "env": {
-                "NODE_ENV": "development"
-            },
-            "sourceMaps": true
+            "name": "启动程序",
+            "program": "${workspaceRoot}\\src\\index.js",
+            "sourceMaps": true, //sourcemap打开
+            "outFiles": [
+                "${workspaceRoot}\\dist\\**\\*.js"
+            ], //源映射，指定实际执行文件
+            "preLaunchTask": "build" //首先执行build task
         }
     ]
 }
