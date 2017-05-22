@@ -1,4 +1,4 @@
-export default function stripComments(stringIN) {
+export default function stripComment(stringIN) {
     const SLASH = '/';
     const BACK_SLASH = '\\';
     const STAR = '*';

@@ -1,4 +1,4 @@
-import stripComments from './StripComment';
+import stripComments from './stripComment';
 
 export default stripComments;
 
