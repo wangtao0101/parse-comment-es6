@@ -1,4 +1,7 @@
 import stripComments from './StripComment';
+
+export default stripComments;
+
 // // import { abc as ccc } from 'helpalias/api';
 // // fsdfasdf
 // import { comabc } , d from './component/com' //sfasdf;
@@ -8,13 +11,13 @@ import stripComments from './StripComment';
 // asdfasdf
 // */
 
-const program = `
-//aaa \r\n
-\`
-safsdfasdf
-\`
-//asdfasdfasdf
-`;
+// const program = `
+// //aaa \r\n
+// \`
+// safsdfasdf
+// \`
+// //asdfasdfasdf
+// `;
 
-console.log(stripComments(program));
+// console.log(stripComments(program));
 

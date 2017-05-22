@@ -1,4 +1,4 @@
-export default function stripComments(stringIN, trackComment) {
+export default function stripComments(stringIN) {
     const SLASH = '/';
     const BACK_SLASH = '\\';
     const STAR = '*';
@@ -221,5 +221,8 @@ export default function stripComments(stringIN, trackComment) {
     while (!atEnd()) {
         process();
     }
-    return output.join('');
+    return {
+        text: output.join(''),
+        comments,
+    };
 }
