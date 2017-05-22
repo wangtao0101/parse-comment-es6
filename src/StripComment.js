@@ -16,7 +16,6 @@ export default function stripComments(stringIN, trackComment) {
     const comments = [];
     let lineNumber = 0;
     let lineStart = 0;
-    const trackC = trackComment;
 
     function nextLine() {
         lineNumber += 1;
@@ -58,61 +57,6 @@ export default function stripComments(stringIN, trackComment) {
                 escaped = !escaped;
             }
             return escaped;
-        }
-        return false;
-    }
-
-    // function isLineTerminator(cp) {
-    //     return cp === '\r' || cp === '\n';
-    // }
-
-    function processBackQuotedString() {
-        if (getCurrentCharacter() === BACK_QUOTE) {
-            add();
-            next();
-            while (!atEnd()) {
-                if (getCurrentCharacter() === BACK_QUOTE && !isEscaping()) {
-                    add();
-                    next();
-                    return true;
-                }
-                add();
-                next();
-            }
-        }
-        return false;
-    }
-
-    function processSingleQuotedString() {
-        if (getCurrentCharacter() === SINGLE_QUOTE) {
-            add();
-            next();
-            while (!atEnd()) {
-                if (getCurrentCharacter() === SINGLE_QUOTE && !isEscaping()) {
-                    add();
-                    next();
-                    return true;
-                }
-                add();
-                next();
-            }
-        }
-        return false;
-    }
-
-    function processDoubleQuotedString() {
-        if (getCurrentCharacter() === DOUBLE_QUOTE) {
-            add();
-            next();
-            while (!atEnd()) {
-                if (getCurrentCharacter() === DOUBLE_QUOTE && !isEscaping()) {
-                    add();
-                    next();
-                    return true;
-                }
-                add();
-                next();
-            }
         }
         return false;
     }
@@ -201,48 +145,49 @@ export default function stripComments(stringIN, trackComment) {
         return false;
     }
 
-    function processRegularExpression() {
-        if (getCurrentCharacter() === SLASH) {
-            add();
-            next();
-            while (!atEnd()) {
-                if (getCurrentCharacter() === SLASH && !isEscaping()) {
-                    add();
-                    next();
-                    return true;
-                }
-                add();
-                next();
-            }
-        }
-        return false;
-    }
-
     function processSingleCharacterExpression(character) {
         if (getCurrentCharacter() === character) {
             add();
             next();
             while (!atEnd()) {
-                if (getCurrentCharacter() === character && !isEscaping()) {
+                /**
+                 * tolerate line feed
+                 */
+                if (getCurrentCharacter() === NEW_LINE
+                    || getCurrentCharacter() === CARRIAGE_RETURN) {
+                    nextLine();
+                    if (getCurrentCharacter() === CARRIAGE_RETURN
+                        && getNextCharacter() === NEW_LINE) {
+                        add();
+                        next();
+                    }
+                    add();
+                    next();
+                    lineStart = position;
+                    if (character !== BACK_QUOTE) {
+                        return true;
+                    }
+                } else if (getCurrentCharacter() === character && !isEscaping()) {
                     add();
                     next();
                     return true;
+                } else {
+                    add();
+                    next();
                 }
-                add();
-                next();
             }
         }
         return false;
     }
 
     function process() {
-        if (processBackQuotedString()) {
+        if (processSingleCharacterExpression(BACK_QUOTE)) {
             return;
         }
-        if (processDoubleQuotedString()) {
+        if (processSingleCharacterExpression(DOUBLE_QUOTE)) {
             return;
         }
-        if (processSingleQuotedString()) {
+        if (processSingleCharacterExpression(SINGLE_QUOTE)) {
             return;
         }
         if (processSingleLineComment()) {
@@ -251,7 +196,7 @@ export default function stripComments(stringIN, trackComment) {
         if (processMultiLineComment()) {
             return;
         }
-        if (processRegularExpression()) {
+        if (processSingleCharacterExpression(SLASH)) {
             return;
         }
         if (!atEnd()) {
