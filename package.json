@@ -2,7 +2,7 @@
   "name": "parse-comment-es6",
   "version": "0.2.0",
   "description": "parse-comment-es6",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wangtao0101/parse-comment-es6.git"
