@@ -49,7 +49,7 @@ export default function stripComment(stringIN) {
         if (getPreviousCharacter() === BACK_SLASH) {
             let caret = position - 1;
             let escaped = true;
-            while (caret - 1 > 0) {
+            while (caret - 1 >= 0) {
                 caret -= 1;
                 if (string.charAt(caret) !== BACK_SLASH) {
                     return escaped;
