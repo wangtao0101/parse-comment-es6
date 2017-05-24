@@ -1,4 +1,4 @@
-import stripComment from './stripComment';
+import stripComment from '../stripComment';
 
 function makeComment(type, range, locStart, locEnd) {
     return {
@@ -21,7 +21,7 @@ function makeComment(type, range, locStart, locEnd) {
 }
 
 describe('stripComment', () => {
-    test('stip LineComment comment correct', () => {
+    test('strip LineComment comment correct', () => {
         const p = '//abc;\n';
         expect(stripComment(p)).toEqual({
             text: '\n',
@@ -31,7 +31,7 @@ describe('stripComment', () => {
         });
     });
 
-    test('stip LineComment comment correct when encounter \r\n', () => {
+    test('strip LineComment comment correct when encounter \r\n', () => {
         const p = '//abc;\r\na';
         expect(stripComment(p)).toEqual({
             text: '\r\na',
@@ -41,7 +41,7 @@ describe('stripComment', () => {
         });
     });
 
-    test('stip BlockComment correct', () => {
+    test('strip BlockComment correct', () => {
         const p = '/*abc*/\n';
         expect(stripComment(p)).toEqual({
             text: '\n',
@@ -51,7 +51,7 @@ describe('stripComment', () => {
         });
     });
 
-    test('stip BlockComment correct mutiline', () => {
+    test('strip BlockComment correct mutiline', () => {
         const p = '/*abc\nabc*/\n';
         expect(stripComment(p)).toEqual({
             text: '\n',
@@ -61,7 +61,7 @@ describe('stripComment', () => {
         });
     });
 
-    test('stip BlockComment correct mutiline  when encounter \r\n', () => {
+    test('strip BlockComment correct mutiline  when encounter \r\n', () => {
         const p = '/*abc\r\nabc*/\n';
         expect(stripComment(p)).toEqual({
             text: '\n',
