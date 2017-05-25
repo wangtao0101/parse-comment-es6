@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`stripcomment complex strip react-dom correct 1`] = `
+Object {
+  "comments": Array [
+    Object {
+      "loc": Object {
+        "end": Object {
+          "column": 20,
+          "line": 0,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 0,
+        },
+      },
+      "range": Object {
+        "end": 20,
+        "start": 0,
+      },
+      "type": "BlockComment",
+    },
+    Object {
+      "loc": Object {
+        "end": Object {
+          "column": 17,
+          "line": 3,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 3,
+        },
+      },
+      "range": Object {
+        "end": 59,
+        "start": 42,
+      },
+      "type": "LineComment",
+    },
+    Object {
+      "loc": Object {
+        "end": Object {
+          "column": 53,
+          "line": 5,
+        },
+        "start": Object {
+          "column": 38,
+          "line": 5,
+        },
+      },
+      "range": Object {
+        "end": 114,
+        "start": 99,
+      },
+      "type": "LineComment",
+    },
+    Object {
+      "loc": Object {
+        "end": Object {
+          "column": 3,
+          "line": 10,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 7,
+        },
+      },
+      "range": Object {
+        "end": 147,
+        "start": 116,
+      },
+      "type": "BlockComment",
+    },
+    Object {
+      "loc": Object {
+        "end": Object {
+          "column": 28,
+          "line": 15,
+        },
+        "start": Object {
+          "column": 20,
+          "line": 15,
+        },
+      },
+      "range": Object {
+        "end": 217,
+        "start": 209,
+      },
+      "type": "LineComment",
+    },
+    Object {
+      "loc": Object {
+        "end": Object {
+          "column": 2,
+          "line": 21,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 19,
+        },
+      },
+      "range": Object {
+        "end": 263,
+        "start": 244,
+      },
+      "type": "BlockComment",
+    },
+    Object {
+      "loc": Object {
+        "end": Object {
+          "column": 11,
+          "line": 25,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 25,
+        },
+      },
+      "range": Object {
+        "end": 300,
+        "start": 289,
+      },
+      "type": "LineComment",
+    },
+  ],
+  "text": "
+
+const a = 'aaaaaa';
+
+
+const regex = /IAM\\\\'\\\\\`\\\\\\\\[aa]AREGEX/g; 
+
+
+function abc(cc) {
+    return 'cccc';
+}
+
+const b = \\"cccccc\\"; 
+
+const c = 'asdfadsfasdf
+
+
+
+const d = \\"ddddddddd\\";
+
+
+
+",
+}
+`;

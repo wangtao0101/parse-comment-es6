@@ -1,5 +1,8 @@
 import stripComment from '../stripComment';
 
+const fs = require('fs');
+const path = require('path');
+
 function makeComment(type, range, locStart, locEnd) {
     return {
         type: type === 0 ? 'LineComment' : 'BlockComment',
@@ -181,3 +184,14 @@ describe('stripComment', () => {
         });
     });
 });
+
+describe('stripcomment complex', () => {
+    test('strip react-dom correct', () => {
+        if (fs.existsSync(path.join(__dirname, 'lib/complex.js'))) {
+            const lib = fs.readFileSync(path.join(__dirname, 'lib/complex.js')).toString();
+            const strippedLib = stripComment(lib);
+            expect(strippedLib).toMatchSnapshot();
+        }
+    });
+});
+
