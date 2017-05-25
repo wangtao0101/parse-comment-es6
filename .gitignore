@@ -3,6 +3,5 @@ npm-debug.*
 .npminstall.done
 .idea
 .DS_Store
-lib/
 coverage/
 dist
