@@ -23,7 +23,8 @@
     "buildlib": "cross-env NODE_ENV=production babel src -d dist --ignore src/test",
     "test": "jest",
     "coverage": "jest --coverage",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "prepublish": "npm run buildlib"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
