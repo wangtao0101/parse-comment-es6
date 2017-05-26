@@ -14,12 +14,13 @@ yarn add parse-comment-es6
 ```
 import strip from 'parse-comment-es6';
 const p = '`aaa`\n//abc\n';
-console.log(strip(p));
+console.log(strip(p, { comment: true, range: true, loc: true, raw: true }));
 // =>
 //    text: '`aaa`\n\n',
 //    comments: [
 //        {
 //             type: 'LineComment',
+//             raw: '//abc'
 //             loc: {
 //                 start: {
 //                     line: 1,
@@ -38,6 +39,16 @@ console.log(strip(p));
 //   ]
 // };
 ```
+
+## Option
+
+| Property      | Description                                     | Type       | Default |
+|-----------|------------------------------------------|------------|--------|
+| comment  | need to return comment list | boolean | false
+| raw  | need to return comment raw, comment option should be true | boolean | false
+| loc  | need to return comment loc, comment option should be true | boolean | false
+| range  | need to return comment range, comment option should be true | boolean | false
+
 
 ## Test
 test past using jquery, react, react-dom

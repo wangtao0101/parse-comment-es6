@@ -18,6 +18,7 @@ Object {
         "end": 20,
         "start": 0,
       },
+      "raw": "/* eslint-disable */",
       "type": "BlockComment",
     },
     Object {
@@ -35,6 +36,7 @@ Object {
         "end": 59,
         "start": 42,
       },
+      "raw": "// i am a comment",
       "type": "LineComment",
     },
     Object {
@@ -52,6 +54,7 @@ Object {
         "end": 114,
         "start": 99,
       },
+      "raw": "//I am a regex;",
       "type": "LineComment",
     },
     Object {
@@ -69,6 +72,10 @@ Object {
         "end": 147,
         "start": 116,
       },
+      "raw": "/**
+ * abc
+ * @param {*} cc
+ */",
       "type": "BlockComment",
     },
     Object {
@@ -86,6 +93,7 @@ Object {
         "end": 217,
         "start": 209,
       },
+      "raw": "//I am b",
       "type": "LineComment",
     },
     Object {
@@ -103,6 +111,9 @@ Object {
         "end": 263,
         "start": 244,
       },
+      "raw": "/* abc
+dfg\\\\r\\\\ndd
+*/",
       "type": "BlockComment",
     },
     Object {
@@ -120,6 +131,7 @@ Object {
         "end": 300,
         "start": 289,
       },
+      "raw": "//ddddddddd",
       "type": "LineComment",
     },
   ],

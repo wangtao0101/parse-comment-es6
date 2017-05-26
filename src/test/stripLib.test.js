@@ -4,10 +4,17 @@ const fs = require('fs');
 const path = require('path');
 const UglifyJS = require('uglify-js');
 
+const option = {
+    comment: true,
+    range: true,
+    loc: true,
+    raw: false,
+};
+
 test('strip jquery correct', () => {
     if (fs.existsSync(path.join(__dirname, 'lib/jquery-3.2.1.js'))) {
         const lib = fs.readFileSync(path.join(__dirname, 'lib/jquery-3.2.1.js')).toString();
-        const strippedLib = stripComment(lib).text;
+        const strippedLib = stripComment(lib, option).text;
         const libMinified = UglifyJS.minify(lib);
         const strippedLibMinified = UglifyJS.minify(strippedLib);
         expect(libMinified).toEqual(strippedLibMinified);
@@ -18,7 +25,7 @@ test('strip jquery correct', () => {
 test('strip react correct', () => {
     if (fs.existsSync(path.join(__dirname, 'lib/react.js'))) {
         const lib = fs.readFileSync(path.join(__dirname, 'lib/react.js')).toString();
-        const strippedLib = stripComment(lib).text;
+        const strippedLib = stripComment(lib, option).text;
         const libMinified = UglifyJS.minify(lib);
         const strippedLibMinified = UglifyJS.minify(strippedLib);
         expect(libMinified).toEqual(strippedLibMinified);
@@ -29,7 +36,7 @@ test('strip react correct', () => {
 test('strip react-dom correct', () => {
     if (fs.existsSync(path.join(__dirname, 'lib/react-dom.js'))) {
         const lib = fs.readFileSync(path.join(__dirname, 'lib/react-dom.js')).toString();
-        const strippedLib = stripComment(lib).text;
+        const strippedLib = stripComment(lib, option).text;
         const libMinified = UglifyJS.minify(lib);
         const strippedLibMinified = UglifyJS.minify(strippedLib);
         expect(libMinified).toEqual(strippedLibMinified);

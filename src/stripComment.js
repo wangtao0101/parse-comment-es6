@@ -1,4 +1,4 @@
-export default function stripComment(stringIN) {
+export default function stripComment(stringIN, option = {}) {
     const SLASH = '/';
     const BACK_SLASH = '\\';
     const STAR = '*';
@@ -16,6 +16,11 @@ export default function stripComment(stringIN) {
     const comments = [];
     let lineNumber = 0;
     let lineStart = 0;
+
+    const comment = option.comment === true;
+    const range = option.range === true;
+    const loc = option.loc === true;
+    const raw = option.raw === true;
 
     function nextLine() {
         lineNumber += 1;
@@ -45,6 +50,25 @@ export default function stripComment(stringIN) {
         return position >= length;
     }
 
+    function addComment(com) {
+        if (!comment) {
+            return;
+        }
+
+        if (!raw) {
+            delete com.raw; // eslint-disable-line
+        }
+
+        if (!loc) {
+            delete com.loc; // eslint-disable-line
+        }
+
+        if (!range) {
+            delete com.range; // eslint-disable-line
+        }
+        comments.push(com);
+    }
+
     function isEscaping() {
         if (getPreviousCharacter() === BACK_SLASH) {
             let caret = position - 1;
@@ -64,26 +88,27 @@ export default function stripComment(stringIN) {
     function processSingleLineComment() {
         if (getCurrentCharacter() === SLASH) {
             if (getNextCharacter() === SLASH) {
-                const comment = {
+                const com = {
                     type: 'LineComment',
                     loc: {},
                     range: {},
                 };
-                comment.loc.start = {
+                com.loc.start = {
                     line: lineNumber,
                     column: position - lineStart,
                 };
-                comment.range.start = position;
+                com.range.start = position;
                 next();
                 while (!atEnd()) {
                     next();
                     if (getCurrentCharacter() === NEW_LINE
                         || getCurrentCharacter() === CARRIAGE_RETURN) {
-                        comment.loc.end = {
+                        com.loc.end = {
                             line: lineNumber,
                             column: position - lineStart,
                         };
-                        comment.range.end = position;
+                        com.range.end = position;
+                        com.raw = string.substring(com.range.start, com.range.end);
                         nextLine();
                         if (getCurrentCharacter() === CARRIAGE_RETURN
                             && getNextCharacter() === NEW_LINE) {
@@ -92,7 +117,7 @@ export default function stripComment(stringIN) {
                         }
                         add();
                         next();
-                        comments.push(comment);
+                        addComment(com);
                         lineStart = position;
                         return true;
                     }
@@ -105,16 +130,16 @@ export default function stripComment(stringIN) {
     function processMultiLineComment() {
         if (getCurrentCharacter() === SLASH) {
             if (getNextCharacter() === STAR) {
-                const comment = {
+                const com = {
                     type: 'BlockComment',
                     loc: {},
                     range: {},
                 };
-                comment.loc.start = {
+                com.loc.start = {
                     line: lineNumber,
                     column: position - lineStart,
                 };
-                comment.range.start = position;
+                com.range.start = position;
                 next();
                 while (!atEnd()) {
                     next();
@@ -130,12 +155,13 @@ export default function stripComment(stringIN) {
                         if (getNextCharacter() === SLASH) {
                             next();
                             next();
-                            comment.loc.end = {
+                            com.loc.end = {
                                 line: lineNumber,
                                 column: position - lineStart,
                             };
-                            comment.range.end = position;
-                            comments.push(comment);
+                            com.range.end = position;
+                            com.raw = string.substring(com.range.start, com.range.end);
+                            addComment(com);
                             return true;
                         }
                     }

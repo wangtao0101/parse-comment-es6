@@ -1,6 +1,6 @@
 {
   "name": "parse-comment-es6",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "description": "parse-comment-es6",
   "main": "dist/index.js",
   "repository": {
