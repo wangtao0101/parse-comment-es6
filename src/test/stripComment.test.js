@@ -268,11 +268,21 @@ describe('option', () => {
             ],
         });
     });
+
+    test('strip line comment in the last line', () => {
+        const p = '//abc';
+        expect(stripComment(p, option)).toEqual({
+            text: '',
+            comments: [
+                makeComment(0, [0, 5], [0, 0], [0, 5]),
+            ],
+        });
+    });
 });
 
 
 describe('stripcomment complex', () => {
-    test('strip react-dom correct', () => {
+    test('strip complex correct', () => {
         if (fs.existsSync(path.join(__dirname, 'lib/complex.js'))) {
             const lib = fs.readFileSync(path.join(__dirname, 'lib/complex.js')).toString();
             const strippedLib = stripComment(lib, {

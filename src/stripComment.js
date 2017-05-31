@@ -122,6 +122,13 @@ export default function stripComment(stringIN, option = {}) {
                         return true;
                     }
                 }
+                com.loc.end = {
+                    line: lineNumber,
+                    column: position - lineStart,
+                };
+                com.range.end = position;
+                com.raw = string.substring(com.range.start, com.range.end);
+                addComment(com);
             }
         }
         return false;

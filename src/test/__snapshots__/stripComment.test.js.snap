@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`stripcomment complex strip react-dom correct 1`] = `
+exports[`stripcomment complex strip complex correct 1`] = `
 Object {
   "comments": Array [
     Object {
