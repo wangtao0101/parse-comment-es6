@@ -15,4 +15,3 @@ coverage/
 stories
 storybook-static
 scripts
-!dist/index.d.ts
