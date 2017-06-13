@@ -17,7 +17,12 @@ export interface Comment {
     },
 }
 
-export default function stripComment(text: string) : {
+export default function stripComment(text: string, option?: {
+    comment? : boolean,
+    range? : boolean,
+    loc? : boolean,
+    raw? : boolean,
+}) : {
     text: string,
     comments: Array<Comment>,
 };
